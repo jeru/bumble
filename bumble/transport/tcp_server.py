@@ -18,6 +18,7 @@
 from __future__ import annotations
 import asyncio
 import logging
+import socket
 
 from .common import Transport, StreamPacketSource
 
@@ -27,11 +28,19 @@ from .common import Transport, StreamPacketSource
 logger = logging.getLogger(__name__)
 
 
+# A pass-through function to ease mock testing.
+async def _create_server(*args, **kw_args):
+    await asyncio.get_running_loop().create_server(*args, **kw_args)
+
+
 # -----------------------------------------------------------------------------
-async def open_tcp_server_transport(spec: str) -> Transport:
+async def open_tcp_server_transport(
+    spec: str | None = None, sock: socket.socket | None = None
+) -> Transport:
     '''
     Open a TCP server transport.
-    The parameter string has this syntax:
+    Should give either `spec` or `sock` but not both. The param `spec` has
+    format
     <local-host>:<local-port>
     Where <local-host> may be the address of a local network interface, or '_'
     to accept connections on all local network interfaces.
@@ -77,13 +86,24 @@ async def open_tcp_server_transport(spec: str) -> Transport:
             else:
                 logger.debug('no client, dropping packet')
 
-    local_host, local_port = spec.split(':')
+    if (spec is None) == (sock is None):
+        raise ValueError('Must give exactly one of spec and sock.')
+
+    if spec is None:
+        local_host, local_port = None, None
+    else:
+        local_host, local_port_str = spec.split(':')
+        local_port = int(local_port_str)
+        if local_host == '_':
+            local_host = None
+
     packet_source = StreamPacketSource()
     packet_sink = TcpServerPacketSink()
-    await asyncio.get_running_loop().create_server(
+    await _create_server(
         lambda: TcpServerProtocol(packet_source, packet_sink),
-        host=local_host if local_host != '_' else None,
-        port=int(local_port),
+        host=local_host,
+        port=local_port,
+        sock=sock,
     )
 
     return TcpServerTransport(packet_source, packet_sink)
