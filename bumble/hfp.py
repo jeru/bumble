@@ -1006,7 +1006,9 @@ class EscoParameters:
     transmit_coding_format: CodingFormat
     receive_coding_format: CodingFormat
     packet_type: HCI_Enhanced_Setup_Synchronous_Connection_Command.PacketType
-    retransmission_effort: HCI_Enhanced_Setup_Synchronous_Connection_Command.RetransmissionEffort
+    retransmission_effort: (
+        HCI_Enhanced_Setup_Synchronous_Connection_Command.RetransmissionEffort
+    )
     max_latency: int
 
     # Common
@@ -1014,12 +1016,12 @@ class EscoParameters:
     output_coding_format: CodingFormat = CodingFormat(CodecID.LINEAR_PCM)
     input_coded_data_size: int = 16
     output_coded_data_size: int = 16
-    input_pcm_data_format: HCI_Enhanced_Setup_Synchronous_Connection_Command.PcmDataFormat = (
-        HCI_Enhanced_Setup_Synchronous_Connection_Command.PcmDataFormat.TWOS_COMPLEMENT
-    )
-    output_pcm_data_format: HCI_Enhanced_Setup_Synchronous_Connection_Command.PcmDataFormat = (
-        HCI_Enhanced_Setup_Synchronous_Connection_Command.PcmDataFormat.TWOS_COMPLEMENT
-    )
+    input_pcm_data_format: (
+        HCI_Enhanced_Setup_Synchronous_Connection_Command.PcmDataFormat
+    ) = HCI_Enhanced_Setup_Synchronous_Connection_Command.PcmDataFormat.TWOS_COMPLEMENT
+    output_pcm_data_format: (
+        HCI_Enhanced_Setup_Synchronous_Connection_Command.PcmDataFormat
+    ) = HCI_Enhanced_Setup_Synchronous_Connection_Command.PcmDataFormat.TWOS_COMPLEMENT
     input_pcm_sample_payload_msb_position: int = 0
     output_pcm_sample_payload_msb_position: int = 0
     input_data_path: HCI_Enhanced_Setup_Synchronous_Connection_Command.DataPath = (

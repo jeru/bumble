@@ -509,9 +509,11 @@ class Ping:
         packet = struct.pack(
             '>bbI',
             PacketType.SEQUENCE,
-            PACKET_FLAG_LAST
-            if self.current_packet_index == self.tx_packet_count - 1
-            else 0,
+            (
+                PACKET_FLAG_LAST
+                if self.current_packet_index == self.tx_packet_count - 1
+                else 0
+            ),
             self.current_packet_index,
         ) + bytes(self.tx_packet_size - 6)
         logging.info(color(f'Sending packet {self.current_packet_index}', 'yellow'))

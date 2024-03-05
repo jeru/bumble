@@ -558,7 +558,9 @@ class AdvertisingParameters:
     )
     primary_advertising_interval_min: int = DEVICE_DEFAULT_ADVERTISING_INTERVAL
     primary_advertising_interval_max: int = DEVICE_DEFAULT_ADVERTISING_INTERVAL
-    primary_advertising_channel_map: HCI_LE_Set_Extended_Advertising_Parameters_Command.ChannelMap = (
+    primary_advertising_channel_map: (
+        HCI_LE_Set_Extended_Advertising_Parameters_Command.ChannelMap
+    ) = (
         AdvertisingChannelMap.CHANNEL_37
         | AdvertisingChannelMap.CHANNEL_38
         | AdvertisingChannelMap.CHANNEL_39
@@ -3279,17 +3281,19 @@ class Device(CompositeEventEmitter):
 
         handler = self.on(
             'remote_name',
-            lambda address, remote_name: pending_name.set_result(remote_name)
-            if address == peer_address
-            else None,
+            lambda address, remote_name: (
+                pending_name.set_result(remote_name)
+                if address == peer_address
+                else None
+            ),
         )
         failure_handler = self.on(
             'remote_name_failure',
-            lambda address, error_code: pending_name.set_exception(
-                HCI_Error(error_code)
-            )
-            if address == peer_address
-            else None,
+            lambda address, error_code: (
+                pending_name.set_exception(HCI_Error(error_code))
+                if address == peer_address
+                else None
+            ),
         )
 
         try:

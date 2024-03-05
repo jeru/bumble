@@ -342,9 +342,11 @@ class Service(Attribute):
             uuid = UUID(uuid)
 
         super().__init__(
-            GATT_PRIMARY_SERVICE_ATTRIBUTE_TYPE
-            if primary
-            else GATT_SECONDARY_SERVICE_ATTRIBUTE_TYPE,
+            (
+                GATT_PRIMARY_SERVICE_ATTRIBUTE_TYPE
+                if primary
+                else GATT_SECONDARY_SERVICE_ATTRIBUTE_TYPE
+            ),
             Attribute.READABLE,
             uuid.to_pdu_bytes(),
         )

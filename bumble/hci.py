@@ -4249,9 +4249,11 @@ class HCI_LE_Set_Extended_Scan_Parameters_Command(HCI_Command):
             fields.append(
                 (
                     f'{scanning_phy_str}.scan_type:    ',
-                    'PASSIVE'
-                    if self.scan_types[i] == self.PASSIVE_SCANNING
-                    else 'ACTIVE',
+                    (
+                        'PASSIVE'
+                        if self.scan_types[i] == self.PASSIVE_SCANNING
+                        else 'ACTIVE'
+                    ),
                 )
             )
             fields.append(

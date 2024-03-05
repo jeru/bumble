@@ -433,12 +433,14 @@ class HostService(HostServicer):
             legacy=request.legacy,
             active=not request.passive,
             own_address_type=request.own_address_type,
-            scan_interval=int(request.interval)
-            if request.interval
-            else DEVICE_DEFAULT_SCAN_INTERVAL,
-            scan_window=int(request.window)
-            if request.window
-            else DEVICE_DEFAULT_SCAN_WINDOW,
+            scan_interval=(
+                int(request.interval)
+                if request.interval
+                else DEVICE_DEFAULT_SCAN_INTERVAL
+            ),
+            scan_window=(
+                int(request.window) if request.window else DEVICE_DEFAULT_SCAN_WINDOW
+            ),
         )
 
         try:
@@ -651,9 +653,11 @@ class HostService(HostServicer):
                             *struct.pack('<H', dt.peripheral_connection_interval_min),
                             *struct.pack(
                                 '<H',
-                                dt.peripheral_connection_interval_max
-                                if dt.peripheral_connection_interval_max
-                                else dt.peripheral_connection_interval_min,
+                                (
+                                    dt.peripheral_connection_interval_max
+                                    if dt.peripheral_connection_interval_max
+                                    else dt.peripheral_connection_interval_min
+                                ),
                             ),
                         ]
                     ),
